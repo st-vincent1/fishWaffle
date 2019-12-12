@@ -11,7 +11,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Max words for dictionary
-total_words = 2000
+total_words = 15000
 # Note: num_words does NOT reduce the size of the dictionary on its own; see
 # https://github.com/keras-team/keras/issues/8092#issuecomment-372833486
 tokenizer = Tokenizer(oov_token = 'UNK', num_words = total_words)
@@ -33,7 +33,6 @@ def dataset_preparation(data):
 	corpus = data.lower().split("\n")
 	# tokenization
 	tokenizer.fit_on_texts(corpus)
-	total_words = len(tokenizer.word_index) + 1
 	# getting rid of infrequent words
 	# pp.pprint(tokenizer.word_index)
 	# pp.pprint(tokenizer.texts_to_sequences(corpus))
@@ -66,14 +65,14 @@ def create_model(predictors, label, max_sequence_len, total_words):
 
 	model = Sequential()
 	model.add(Embedding(total_words+1, 10, input_length=max_sequence_len-1))
-	model.add(LSTM(100, return_sequences = True))
+	model.add(LSTM(200, return_sequences = True))
 	model.add(Dropout(0.05))
-	model.add(LSTM(100))
+	model.add(LSTM(200))
 	model.add(Dense(total_words+1, activation='softmax'))
 
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 	earlystop = EarlyStopping(monitor='val_accuracy', min_delta=1, patience=5, verbose=0, mode='auto')
-	model.fit(predictors, label, epochs=150, verbose=1, callbacks=[earlystop])
+	model.fit(predictors, label, epochs=100, verbose=1, callbacks=[earlystop], batch_size=2096)
 	print(model.summary())
 	return model
 
@@ -106,7 +105,7 @@ def save_model(filename, weights, model):
 	print("Saved model to disk")
 
 def load_model(filename, weights):
-	json_file = open('model.json', 'r')
+	json_file = open(filename, 'r')
 	loaded_model_json = json_file.read()
 	json_file.close()
 	model = model_from_json(loaded_model_json)
@@ -134,16 +133,15 @@ def analyse(text):
 	print(max(res_dic, key = res_dic.get))
 	return res_dic
 
-data = open('../data/plato.txt')
+data = open('../data/k_punk_spellchecked.txt')
 
 # Analysing punctuation in data
 # analyse(data)
 
 data = sentencise(data)
 predictors, label, max_sequence_len, total_words = dataset_preparation(data)
-<<<<<<< HEAD
 model = create_model(predictors, label, max_sequence_len, total_words)
 save_model('k_punk_model.json', 'model.h5', model)
 
-model = load_model('k_punk_model.json', 'model.h5')
+#model = load_model('k_punk_model.json', 'model.h5')
 print(generate_text("And don't get me started on", 100, max_sequence_len))
