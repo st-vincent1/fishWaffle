@@ -1,13 +1,14 @@
-from keras.preprocessing.sequence import pad_sequences
-from keras.layers import Embedding, LSTM, Dense, Dropout
-from keras.preprocessing.text import Tokenizer
-from keras.callbacks import EarlyStopping
-from keras.models import Sequential, model_from_json
-import keras.utils as ku
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.models import Sequential, model_from_json
+import tensorflow.keras.utils as ku
 import numpy as np
 import re
 import pprint as pp
-
+import warnings
+warnings.filterwarnings('ignore')
 
 # Max words for dictionary
 total_words = 2000
@@ -71,7 +72,7 @@ def create_model(predictors, label, max_sequence_len, total_words):
 
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 	earlystop = EarlyStopping(monitor='val_loss', min_delta=0, patience=5, verbose=0, mode='auto')
-	model.fit(predictors, label, epochs=1, verbose=1, callbacks=[earlystop])
+	model.fit(predictors, label, epochs=60, verbose=1, callbacks=[earlystop])
 	print(model.summary())
 	return model
 
@@ -133,7 +134,7 @@ def analyse(text):
 
 
 	return index
-data = open('data.txt')
+data = open('../data/plato.txt')
 
 # Analysing punctuation in data
 # analyse(data)
@@ -141,7 +142,7 @@ data = open('data.txt')
 data = sentencise(data)
 predictors, label, max_sequence_len, total_words = dataset_preparation(data)
 model = create_model(predictors, label, max_sequence_len, total_words)
-save_model('model.json', 'model.h5', model)
+save_model('k_punk_model.json', 'model.h5', model)
 #
 # model = load_model('model.json', 'model.h5')
 print(generate_text("After all", 500, max_sequence_len))
