@@ -1,19 +1,28 @@
+# from tensorflow.python.keras.preprocessing.sequence import pad_sequences
+# from tensorflow.python.keras.layers import Embedding, LSTM, Dense, Dropout
+# from tensorflow.python.keras.preprocessing.text import Tokenizer
+# from tensorflow.python.keras.callbacks import EarlyStopping
+# from tensorflow.python.keras.models import Sequential, model_from_json
+# import tensorflow.python.keras.utils as ku
+
 from keras.preprocessing.sequence import pad_sequences
 from keras.layers import Embedding, LSTM, Dense, Dropout
 from keras.preprocessing.text import Tokenizer
 from keras.callbacks import EarlyStopping
-from keras.models import Sequential, model_from_json
+from tensorflow.keras.models import Sequential, model_from_json
 import keras.utils as ku
 import numpy as np
 import re
 import pprint as pp
-
+import warnings
+warnings.filterwarnings('ignore')
 
 # Max words for dictionary
 total_words = 2000
 # Note: num_words does NOT reduce the size of the dictionary on its own; see
 # https://github.com/keras-team/keras/issues/8092#issuecomment-372833486
 tokenizer = Tokenizer(oov_token = 'UNK', num_words = total_words)
+# tokenizer = Tokenizer()
 def sentencise(text):
 	dump = ""
 	line = text.readline()
@@ -31,15 +40,15 @@ def dataset_preparation(data):
 	corpus = data.lower().split("\n")
 	# tokenization
 	tokenizer.fit_on_texts(corpus)
-
+	total_words = len(tokenizer.word_index) + 1
 	# getting rid of infrequent words
 	# pp.pprint(tokenizer.word_index)
 	# pp.pprint(tokenizer.texts_to_sequences(corpus))
 
 	# KEY STEP FOR HANDLING UNK
-	tokenizer.word_index = {e:i for e,i in tokenizer.word_index.items() if i < total_words}
-	tokenizer.word_index[tokenizer.oov_token] = total_words
-	pp.pprint(tokenizer.word_index)
+	# tokenizer.word_index = {e:i for e,i in tokenizer.word_index.items() if i < total_words}
+	# tokenizer.word_index[tokenizer.oov_token] = total_words
+	pp.pprint(len(tokenizer.word_index))
 	# pp.pprint(tokenizer.texts_to_sequences(corpus))
 
 	# create input sequences using list of tokens
@@ -70,8 +79,8 @@ def create_model(predictors, label, max_sequence_len, total_words):
 	model.add(Dense(total_words+1, activation='softmax'))
 
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-	earlystop = EarlyStopping(monitor='val_loss', min_delta=0, patience=5, verbose=0, mode='auto')
-	model.fit(predictors, label, epochs=1, verbose=1, callbacks=[earlystop])
+	earlystop = EarlyStopping(monitor='val_accuracy', min_delta=1, patience=5, verbose=0, mode='auto')
+	model.fit(predictors, label, epochs=150, verbose=1, callbacks=[earlystop])
 	print(model.summary())
 	return model
 
@@ -130,18 +139,17 @@ def analyse(text):
 		line = text.readline()
 	pp.pprint(res_dic)
 	print(max(res_dic, key = res_dic.get))
+	return res_dic
 
-
-	return index
-data = open('data.txt')
+data = open('../data/plato.txt')
 
 # Analysing punctuation in data
 # analyse(data)
 
 data = sentencise(data)
 predictors, label, max_sequence_len, total_words = dataset_preparation(data)
-model = create_model(predictors, label, max_sequence_len, total_words)
-save_model('model.json', 'model.h5', model)
+# model = create_model(predictors, label, max_sequence_len, total_words)
+# save_model('model.json', 'model.h5', model)
 #
-# model = load_model('model.json', 'model.h5')
-print(generate_text("After all", 500, max_sequence_len))
+model = load_model('model.json', 'model.h5')
+print(generate_text("And don't get me started on", 100, max_sequence_len))
