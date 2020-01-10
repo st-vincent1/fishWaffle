@@ -40,11 +40,7 @@ def dataset_preparation(data):
 	# KEY STEP FOR HANDLING UNK
 	# tokenizer.word_index = {e:i for e,i in tokenizer.word_index.items() if i < total_words}
 	# tokenizer.word_index[tokenizer.oov_token] = total_words
-	pp.pprint(len(tokenizer.word_index
-def create_model(predictors, label, max_sequence_len, total_words):
-
-	model = Sequential()
-	model.add(Embedding(total_words+1, 10, input_length=max_sequence_len-1))))
+	pp.pprint(len(tokenizer.word_index))
 	# pp.pprint(tokenizer.texts_to_sequences(corpus))
 
 	# create input sequences using list of tokens
