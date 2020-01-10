@@ -11,7 +11,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Max words for dictionary
-total_words = 8000
+total_words = 5000
 # Note: num_words does NOT reduce the size of the dictionary on its own; see
 # https://github.com/keras-team/keras/issues/8092#issuecomment-372833486
 tokenizer = Tokenizer(oov_token = 'UNK', num_words = total_words)
