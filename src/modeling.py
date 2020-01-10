@@ -11,7 +11,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Max words for dictionary
-total_words = 15000
+total_words = 2000
 # Note: num_words does NOT reduce the size of the dictionary on its own; see
 # https://github.com/keras-team/keras/issues/8092#issuecomment-372833486
 tokenizer = Tokenizer(oov_token = 'UNK', num_words = total_words)
@@ -110,7 +110,7 @@ def load_model(filename, weights):
 	json_file.close()
 	model = model_from_json(loaded_model_json)
 	# load weights into new model
-	model.load_weights("model.h5")
+	model.load_weights("k_punk_model.h5")
 	print("Loaded model from disk")
 	return model
 
@@ -141,7 +141,7 @@ data = open('../data/k_punk_spellchecked.txt')
 data = sentencise(data)
 predictors, label, max_sequence_len, total_words = dataset_preparation(data)
 model = create_model(predictors, label, max_sequence_len, total_words)
-save_model('k_punk_model.json', 'model.h5', model)
+save_model('k_punk_model.json', 'k_punk_model.h5', model)
 
-#model = load_model('k_punk_model.json', 'model.h5')
+# model = load_model('k_punk_model.json', 'model.h5')
 print(generate_text("And don't get me started on", 100, max_sequence_len))
