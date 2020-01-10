@@ -34,12 +34,12 @@ def dataset_preparation(data):
 	# tokenization
 	tokenizer.fit_on_texts(corpus)
 	# getting rid of infrequent words
-	# pp.pprint(tokenizer.word_index)
-	# pp.pprint(tokenizer.texts_to_sequences(corpus))
+	pp.pprint(tokenizer.word_index)
+	pp.pprint(tokenizer.texts_to_sequences(corpus))
 
 	# KEY STEP FOR HANDLING UNK
-	# tokenizer.word_index = {e:i for e,i in tokenizer.word_index.items() if i < total_words}
-	# tokenizer.word_index[tokenizer.oov_token] = total_words
+	tokenizer.word_index = {e:i for e,i in tokenizer.word_index.items() if i < total_words}
+	tokenizer.word_index[tokenizer.oov_token] = total_words
 	pp.pprint(len(tokenizer.word_index))
 	# pp.pprint(tokenizer.texts_to_sequences(corpus))
 
@@ -72,7 +72,7 @@ def create_model(predictors, label, max_sequence_len, total_words):
 
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 	earlystop = EarlyStopping(monitor='val_accuracy', min_delta=1, patience=5, verbose=0, mode='auto')
-	model.fit(predictors, label, epochs=100, verbose=1, callbacks=[earlystop], batch_size=2096)
+	model.fit(predictors, label, epochs=2, verbose=1, callbacks=[earlystop], batch_size=2096)
 	print(model.summary())
 	return model
 
