@@ -11,7 +11,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Max words for dictionary
-total_words = 10000
+total_words = 8000
 # Note: num_words does NOT reduce the size of the dictionary on its own; see
 # https://github.com/keras-team/keras/issues/8092#issuecomment-372833486
 tokenizer = Tokenizer(oov_token = 'UNK', num_words = total_words)
@@ -40,7 +40,11 @@ def dataset_preparation(data):
 	# KEY STEP FOR HANDLING UNK
 	# tokenizer.word_index = {e:i for e,i in tokenizer.word_index.items() if i < total_words}
 	# tokenizer.word_index[tokenizer.oov_token] = total_words
-	pp.pprint(len(tokenizer.word_index))
+	pp.pprint(len(tokenizer.word_index
+def create_model(predictors, label, max_sequence_len, total_words):
+
+	model = Sequential()
+	model.add(Embedding(total_words+1, 10, input_length=max_sequence_len-1))))
 	# pp.pprint(tokenizer.texts_to_sequences(corpus))
 
 	# create input sequences using list of tokens
