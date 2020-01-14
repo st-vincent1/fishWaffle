@@ -10,21 +10,22 @@ import pprint as pp
 import warnings
 warnings.filterwarnings('ignore')
 
-# Max words for dictionary
-total_words = 4720
 # Note: num_words does NOT reduce the size of the dictionary on its own; see
 # https://github.com/keras-team/keras/issues/8092#issuecomment-372833486
-tokenizer = Tokenizer(lower = False, oov_token = 'UNK', filters = '!"#$%&()*+,./:;<=>?@\\^_`{|}~\t\n', num_words = total_words)
+""" This definition is if handling UNK words """
+# total_words = 5000
+# tokenizer = Tokenizer(lower = False, oov_token = 'UNK', filters = '!"#$%&()*+,./:;<=>?@\\^_`{|}~\t\n', num_words = total_words)
+""" End """
+tokenizer = Tokenizer(lower = False, oov_token = 'UNK', filters = '!"#$%&()*+,./:;<=>?@\\^_`{|}~\t\n')
 # tokenizer = Tokenizer()
 def sentencise(text):
 	dump = ""
 	line = text.readline()
 	while(line):
-		line = re.sub('\.\.\.(\r|\n| )+', ' eos ', line)
+		line = re.sub('\.\.\.', ' eos', line)
 		dump = dump + line + ' '
 		line = text.readline()
-		# Get rid of multiple apostrophe confusions
-		# line = re.sub(r"([a-z]+)('?)([a-z]?)", r'\1', line)
+	print(dump)
 	return dump
 
 def dataset_preparation(data):
@@ -32,13 +33,18 @@ def dataset_preparation(data):
 	corpus = data.lower().split("\n")
 	# tokenization
 	tokenizer.fit_on_texts(corpus)
+	total_words = len(tokenizer.word_index)
+
+
+	""" Fragment below is for handling unknown words """
 	# getting rid of infrequent words
-	pp.pprint(tokenizer.word_index)
+	# pp.pprint(tokenizer.word_index)
 	# KEY STEP FOR HANDLING UNK
 	# tokenizer.word_index = {e:i for e,i in tokenizer.word_index.items() if i < total_words}
 	# tokenizer.word_index[tokenizer.oov_token] = total_words
-	pp.pprint(len(tokenizer.word_index))
+	# pp.pprint(len(tokenizer.word_index))
 	# pp.pprint(tokenizer.texts_to_sequences(corpus))
+	""" End """
 
 	# create input sequences using list of tokens
 	input_sequences = []
@@ -62,9 +68,9 @@ def create_model(predictors, label, max_sequence_len, total_words):
 
 	model = Sequential()
 	model.add(Embedding(total_words+1, 10, input_length=max_sequence_len-1))
-	model.add(LSTM(128, return_sequences = True))
-	model.add(Dropout(0.1))
-	model.add(LSTM(128))
+	model.add(LSTM(512, return_sequences = True))
+	model.add(Dropout(0.2))
+	model.add(LSTM(512))
 	model.add(Dense(total_words+1, activation='softmax'))
 
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
@@ -88,10 +94,9 @@ def generate_text(seed_text, next_words, max_sequence_len):
 				break
 
 		seed_text += " " + output_word
-	seed_text = re.sub(' eos', '...', seed_text)
-	seed_text = '... '.join(i.strip().capitalize() for i in seed_text.split('...'))
+	seed_text = re.sub(' eos', '\.\.\.', seed_text)
+	seed_text = '...'.join(i.strip().capitalize() for i in seed_text.split('...'))
 	return seed_text
-	# return seed_text
 
 def save_model(filename, weights, model):
 	model_json = model.to_json()
