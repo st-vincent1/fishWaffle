@@ -20,12 +20,12 @@ def sentencise(text):
 	dump = ""
 	line = text.readline()
 	while(line):
-		line = re.sub('\.(\r|\n| )+', ' EOS ', line)
+		line = re.sub('\.\.\.(\r|\n| )+', ' eos ', line)
 		dump = dump + line + ' '
 		line = text.readline()
 		# Get rid of multiple apostrophe confusions
 		# line = re.sub(r"([a-z]+)('?)([a-z]?)", r'\1', line)
-	return dump[:1000000]
+	return dump
 
 def dataset_preparation(data):
 
@@ -91,8 +91,8 @@ def generate_text(seed_text, next_words, max_sequence_len):
 				break
 
 		seed_text += " " + output_word
-	seed_text = re.sub(' eos', '.', seed_text)
-	seed_text = '. '.join(i.strip().capitalize() for i in seed_text.split('.'))
+	seed_text = re.sub(' eos', '...', seed_text)
+	seed_text = '... '.join(i.strip().capitalize() for i in seed_text.split('...'))
 	return seed_text
 	# return seed_text
 
@@ -110,7 +110,7 @@ def load_model(filename, weights):
 	json_file.close()
 	model = model_from_json(loaded_model_json)
 	# load weights into new model
-	model.load_weights("k_punk_model.h5")
+	model.load_weights(weights)
 	print("Loaded model from disk")
 	return model
 
@@ -133,7 +133,7 @@ def analyse(text):
 	print(max(res_dic, key = res_dic.get))
 	return res_dic
 
-data = open('../data/k_punk_spellchecked.txt')
+data = open('../data/trainData/train.txt')
 
 # Analysing punctuation in data
 # analyse(data)
@@ -141,7 +141,7 @@ data = open('../data/k_punk_spellchecked.txt')
 data = sentencise(data)
 predictors, label, max_sequence_len, total_words = dataset_preparation(data)
 model = create_model(predictors, label, max_sequence_len, total_words)
-save_model('k_punk_model.json', 'k_punk_model.h5', model)
+save_model('conv_model.json', 'conv_model.h5', model)
 
 # model = load_model('k_punk_model.json', 'model.h5')
-print(generate_text("And don't get me started on", 100, max_sequence_len))
+print(generate_text("When I used to", 100, max_sequence_len))
