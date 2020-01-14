@@ -62,14 +62,14 @@ def create_model(predictors, label, max_sequence_len, total_words):
 
 	model = Sequential()
 	model.add(Embedding(total_words+1, 10, input_length=max_sequence_len-1))
-	model.add(LSTM(200, return_sequences = True))
+	model.add(LSTM(128, return_sequences = True))
 	model.add(Dropout(0.1))
-	model.add(LSTM(200))
+	model.add(LSTM(128))
 	model.add(Dense(total_words+1, activation='softmax'))
 
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 	# earlystop = EarlyStopping(monitor='val_loss', min_delta=1, patience=5, verbose=0, mode='auto')
-	model.fit(predictors, label, epochs=150, verbose=1, batch_size=256)
+	model.fit(predictors, label, epochs=16, verbose=1, batch_size=128)
 	print(model.summary())
 	return model
 
