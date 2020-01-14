@@ -1,5 +1,5 @@
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout
+from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout, BatchNormalization
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.models import Sequential, model_from_json
@@ -69,14 +69,26 @@ def create_model(predictors, label, max_sequence_len, total_words):
 
 	model = Sequential()
 	model.add(Embedding(total_words+1, 10, input_length=max_sequence_len-1))
-	model.add(LSTM(512, return_sequences = True))
-	model.add(Dropout(0.2))
-	model.add(LSTM(512))
+	model.add(LSTM(512,
+			  activation = 'tanh',
+			  recurrent_activation = 'hard_sigmoid',
+			  recurrent_dropout=0.0,
+			  dropout = 0.2,
+			  return_sequences = True))
+	model.add(BatchNormalization())
+	model.add(LSTM(512,
+			  activation = 'tanh',
+			  recurrent_activation = 'hard_sigmoid',
+			  recurrent_dropout=0.0,
+			  dropout = 0.2,
+			  return_sequences = False))
+	model.add(BatchNormalization())
+	model.add(Dropout(0.5))
 	model.add(Dense(total_words+1, activation='softmax'))
 
-	model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=0.01), metrics=['accuracy'])
+	model.compile(loss='categorical_crossentropy', optimizer=Adam(lr = 2e-3), metrics=['accuracy'])
 	# earlystop = EarlyStopping(monitor='val_loss', min_delta=1, patience=5, verbose=0, mode='auto')
-	model.fit(predictors, label, epochs=16, verbose=1, batch_size=512)
+	model.fit(predictors, label, epochs=2, verbose=1, batch_size=512)
 	print(model.summary())
 	return model
 
@@ -95,7 +107,7 @@ def generate_text(seed_text, next_words, max_sequence_len):
 				break
 
 		seed_text += " " + output_word
-	seed_text = re.sub(' eos', '\.\.\.', seed_text)
+	seed_text = re.sub(' eos', '...', seed_text)
 	seed_text = '...'.join(i.strip().capitalize() for i in seed_text.split('...'))
 	return seed_text
 
