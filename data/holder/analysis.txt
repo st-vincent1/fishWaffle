@@ -1,0 +1,5 @@
+Interview ends at INTERVIEW TERMINATES
+Interview starts after a newline I think, or maybe you can count up to when it starts
+Need to identify all speakers. When speaker changes, make a note of it and include a SPACE tag for the model to know there is a space. 
+
+apostrophes don't work, 
