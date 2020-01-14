@@ -3,6 +3,7 @@ from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.models import Sequential, model_from_json
+from tensorflow.keras.optimizers import Adam
 import tensorflow.keras.utils as ku
 import numpy as np
 import re
@@ -73,7 +74,7 @@ def create_model(predictors, label, max_sequence_len, total_words):
 	model.add(LSTM(512))
 	model.add(Dense(total_words+1, activation='softmax'))
 
-	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+	model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=0.01), metrics=['accuracy'])
 	# earlystop = EarlyStopping(monitor='val_loss', min_delta=1, patience=5, verbose=0, mode='auto')
 	model.fit(predictors, label, epochs=16, verbose=1, batch_size=512)
 	print(model.summary())
