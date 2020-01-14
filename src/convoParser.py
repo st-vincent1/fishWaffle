@@ -50,7 +50,7 @@ for process_file in os.listdir(conv_path):
             else:
                 dump = dump + ' ' + s
         line = f.readline()
-    wrapped = '\n'.join(tw.wrap(dump))
+    wrapped = '\n'.join(tw.wrap(dump[4:]))
     write_text_file = open(os.path.join(train_path, dest_file_path), "w+")
     write_text_file.write(wrapped)
     write_text_file.close()
