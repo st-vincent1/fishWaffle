@@ -14,7 +14,7 @@ warnings.filterwarnings('ignore')
 total_words = 10000
 # Note: num_words does NOT reduce the size of the dictionary on its own; see
 # https://github.com/keras-team/keras/issues/8092#issuecomment-372833486
-tokenizer = Tokenizer(lower = False, oov_token = 'UNK', filters = '!"#$%&()*+,./:;<=>?@[\\]^_`{|}~\t\n', num_words = total_words)
+tokenizer = Tokenizer(lower = False, oov_token = 'UNK', filters = '!"#$%&()*+,./:;<=>?@\\^_`{|}~\t\n', num_words = total_words)
 # tokenizer = Tokenizer()
 def sentencise(text):
 	dump = ""
