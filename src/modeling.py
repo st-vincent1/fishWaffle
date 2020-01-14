@@ -1,5 +1,5 @@
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout, BatchNormalization
+from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout, BatchNormalization, Lambda
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.models import Sequential, model_from_json
@@ -84,12 +84,12 @@ def create_model(predictors, label, max_sequence_len, total_words):
 			  return_sequences = False))
 	model.add(BatchNormalization())
 	model.add(Dropout(0.5))
-	model.add(Lambda(lambda x: x / temp))
+	model.add(Lambda(lambda x: x / 0.8))
 	model.add(Dense(total_words+1, activation='softmax'))
 
 	model.compile(loss='categorical_crossentropy', optimizer=Adam(lr = 2e-3), metrics=['accuracy'])
 	# earlystop = EarlyStopping(monitor='val_loss', min_delta=1, patience=5, verbose=0, mode='auto')
-	model.fit(predictors, label, epochs=128, verbose=1, batch_size=512)
+	model.fit(predictors, label, epochs=48, verbose=1, batch_size=512)
 	print(model.summary())
 	return model
 
