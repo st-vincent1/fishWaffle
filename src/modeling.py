@@ -69,7 +69,7 @@ def create_model(predictors, label, max_sequence_len, total_words):
 
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 	# earlystop = EarlyStopping(monitor='val_loss', min_delta=1, patience=5, verbose=0, mode='auto')
-	model.fit(predictors, label, epochs=16, verbose=1, batch_size=128)
+	model.fit(predictors, label, epochs=16, verbose=1, batch_size=512)
 	print(model.summary())
 	return model
 
