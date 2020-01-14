@@ -14,7 +14,7 @@ warnings.filterwarnings('ignore')
 total_words = 10000
 # Note: num_words does NOT reduce the size of the dictionary on its own; see
 # https://github.com/keras-team/keras/issues/8092#issuecomment-372833486
-tokenizer = Tokenizer(oov_token = 'UNK', num_words = total_words)
+tokenizer = Tokenizer(lower = False, oov_token = 'UNK', filters = '!"#$%&()*+,./:;<=>?@[\\]^_`{|}~\t\n', num_words = total_words)
 # tokenizer = Tokenizer()
 def sentencise(text):
 	dump = ""
@@ -28,18 +28,15 @@ def sentencise(text):
 	return dump
 
 def dataset_preparation(data):
-
 	# basic cleanup
 	corpus = data.lower().split("\n")
 	# tokenization
 	tokenizer.fit_on_texts(corpus)
 	# getting rid of infrequent words
 	pp.pprint(tokenizer.word_index)
-	pp.pprint(tokenizer.texts_to_sequences(corpus))
-
 	# KEY STEP FOR HANDLING UNK
-	tokenizer.word_index = {e:i for e,i in tokenizer.word_index.items() if i < total_words}
-	tokenizer.word_index[tokenizer.oov_token] = total_words
+	# tokenizer.word_index = {e:i for e,i in tokenizer.word_index.items() if i < total_words}
+	# tokenizer.word_index[tokenizer.oov_token] = total_words
 	pp.pprint(len(tokenizer.word_index))
 	# pp.pprint(tokenizer.texts_to_sequences(corpus))
 
@@ -65,14 +62,14 @@ def create_model(predictors, label, max_sequence_len, total_words):
 
 	model = Sequential()
 	model.add(Embedding(total_words+1, 10, input_length=max_sequence_len-1))
-	model.add(LSTM(100, return_sequences = True))
-	model.add(Dropout(0.05))
-	model.add(LSTM(100))
+	model.add(LSTM(200, return_sequences = True))
+	model.add(Dropout(0.1))
+	model.add(LSTM(200))
 	model.add(Dense(total_words+1, activation='softmax'))
 
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-	earlystop = EarlyStopping(monitor='val_accuracy', min_delta=1, patience=5, verbose=0, mode='auto')
-	model.fit(predictors, label, epochs=150, verbose=1, callbacks=[earlystop], batch_size=2096)
+	earlystop = EarlyStopping(monitor='accuracy', min_delta=1, patience=5, verbose=0, mode='auto')
+	model.fit(predictors, label, epochs=150, verbose=1, callbacks=[earlystop], batch_size=256)
 	print(model.summary())
 	return model
 
