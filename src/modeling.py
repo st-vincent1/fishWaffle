@@ -11,7 +11,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Max words for dictionary
-total_words = 10000
+total_words = 4720
 # Note: num_words does NOT reduce the size of the dictionary on its own; see
 # https://github.com/keras-team/keras/issues/8092#issuecomment-372833486
 tokenizer = Tokenizer(lower = False, oov_token = 'UNK', filters = '!"#$%&()*+,./:;<=>?@\\^_`{|}~\t\n', num_words = total_words)
@@ -68,8 +68,8 @@ def create_model(predictors, label, max_sequence_len, total_words):
 	model.add(Dense(total_words+1, activation='softmax'))
 
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-	earlystop = EarlyStopping(monitor='accuracy', min_delta=1, patience=5, verbose=0, mode='auto')
-	model.fit(predictors, label, epochs=150, verbose=1, callbacks=[earlystop], batch_size=256)
+	# earlystop = EarlyStopping(monitor='val_loss', min_delta=1, patience=5, verbose=0, mode='auto')
+	model.fit(predictors, label, epochs=150, verbose=1, batch_size=256)
 	print(model.summary())
 	return model
 
