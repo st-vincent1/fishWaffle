@@ -45,13 +45,23 @@ for process_file in os.listdir(conv_path):
     while(line):
         s, start = parse(line)
         if filters(s):
+            """
+            between two sentences: put EOS tag if last character is a letter. Leave this otherwise.
+            """
             if start:
-                dump = dump + '... ' + s
+                # If starting now, then previous has finished; finish previous sentence
+                # If prev had a punctuation mark at the end, leave it there. Else, mark EOS
+                if dump[:-1] not in '-,.?!':
+                    dump += ' EOS '
+                else:
+                    dump += ' '
+                # Append new utterance to dataset
+                dump = dump + s
             else:
                 dump = dump + ' ' + s
         line = f.readline()
-    wrapped = '\n'.join(tw.wrap(dump[4:]))
-    write_text_file = open(os.path.join(train_path, dest_file_path), "w+")
+    wrapped = '\n'.join(tw.wrap(dump))
+    write_text_file = open(os.path.join(train_path, dest_file_path), "w")
     write_text_file.write(wrapped)
     write_text_file.close()
     i += 1

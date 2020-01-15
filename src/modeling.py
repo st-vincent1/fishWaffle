@@ -17,7 +17,7 @@ warnings.filterwarnings('ignore')
 # total_words = 5000
 # tokenizer = Tokenizer(lower = False, oov_token = 'UNK', filters = '!"#$%&()*+,./:;<=>?@\\^_`{|}~\t\n', num_words = total_words)
 """ End """
-tokenizer = Tokenizer(lower = False, oov_token = 'UNK', filters = '!"#$%&()*+,./:;<=>?@\\^_`{|}~\t\n')
+tokenizer = Tokenizer(lower = False, oov_token = 'UNK', filters = '!"#$%&()*+,/:;<=>?@\\^_`{|}~\t\n')
 # tokenizer = Tokenizer()
 def sentencise(text):
 	dump = ""
@@ -89,7 +89,7 @@ def create_model(predictors, label, max_sequence_len, total_words):
 
 	model.compile(loss='categorical_crossentropy', optimizer=Adam(lr = 2e-3), metrics=['accuracy'])
 	# earlystop = EarlyStopping(monitor='val_loss', min_delta=1, patience=5, verbose=0, mode='auto')
-	model.fit(predictors, label, epochs=48, verbose=1, batch_size=512)
+	model.fit(predictors, label, epochs=128, verbose=1, batch_size=512)
 	print(model.summary())
 	return model
 
@@ -160,4 +160,4 @@ model = create_model(predictors, label, max_sequence_len, total_words)
 save_model('conv_model.json', 'conv_model.h5', model)
 
 # model = load_model('k_punk_model.json', 'model.h5')
-print(generate_text("When I used to", 100, max_sequence_len))
+print(generate_text("Is that yours? ", 500, max_sequence_len))
