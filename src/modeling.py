@@ -84,6 +84,7 @@ def create_model(predictors, label, max_sequence_len, total_words):
 			  return_sequences = False))
 	model.add(BatchNormalization())
 	model.add(Dropout(0.5))
+	# Temperature
 	model.add(Lambda(lambda x: x / 0.8))
 	model.add(Dense(total_words+1, activation='softmax'))
 

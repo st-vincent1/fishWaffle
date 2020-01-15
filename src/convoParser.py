@@ -15,11 +15,17 @@ def filters(s):
 
 def parse(s):
     start = False
-    s = re.sub(r'\[inc\]', '**inc**', s)
+    s = re.sub(r'\[anon\]', '**anon**', s)
     s = re.sub(r'\(([^()]+)\)|\[([^\[\]]+)\]', '', s)
-    if s[0:2] in speakers:
-        s = s[2:]
+    if re.findall(r'^[A-Z]+:', s):
+        s = s[2:] if s[1] == ':' else s[3:]
         start = True
+    # if s[0:2] in speakers:
+    #     print(s[0:2])
+    #     s = s[2:]
+    #     print(s)
+    #     start = True
+    #     print(start)
     s = re.sub(r'\s{2,}', ' ', s)
     return s.strip(), start
 
@@ -40,7 +46,7 @@ for process_file in os.listdir(conv_path):
     while(line == '\n'):
         line = f.readline()
     while(line != '\n'):
-        speakers += [line[0:2]]
+        speakers += [re.findall(r'[A-Z]+:', line)[0][:-1]]
         line = f.readline()
     while(line):
         s, start = parse(line)
