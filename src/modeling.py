@@ -98,6 +98,7 @@ def create_model(predictors, label, max_sequence_len, total_words):
 	# list all data in history
 	#print(h.history.keys())
 	# summarize history for accuracy
+	fig = plt.figure()
 	plt.plot(h.history['acc'])
 	plt.title('model accuracy')
 	plt.ylabel('accuracy')
