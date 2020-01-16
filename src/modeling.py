@@ -104,6 +104,9 @@ def create_model(predictors, label, max_sequence_len, total_words):
 	plt.xlabel('epoch')
 	plt.legend(['train', 'test'], loc='upper left')
 	plt.show()
+	fig.savefig('my_figure.png')
+	from IPython.display import Image
+	Image('my_figure.png')
 	# # summarize history for loss
 	# plt.plot(h.h['loss'])
 	# plt.plot(h.h['val_loss'])
