@@ -95,19 +95,17 @@ def create_model(predictors, label, max_sequence_len, total_words):
 	# earlystop = EarlyStopping(monitor='val_loss', min_delta=1, patience=5, verbose=0, mode='auto')
 	h = model.fit(predictors, label, epochs=1, verbose=1, batch_size=512)
 	print(model.summary())
-	# list all data in history
-	#print(h.history.keys())
 	# summarize history for accuracy
 	fig = plt.figure()
-	plt.plot(h.history['acc'])
+	plt.plot(h.history['acc'], 'ro')
 	plt.title('model accuracy')
 	plt.ylabel('accuracy')
 	plt.xlabel('epoch')
 	plt.legend(['train', 'test'], loc='upper left')
 	plt.show()
-	fig.savefig('my_figure.png')
+	fig.savefig('accuracy_plot.png')
 	from IPython.display import Image
-	Image('my_figure.png')
+	Image('accuracy_plot.png')
 	# # summarize history for loss
 	# plt.plot(h.h['loss'])
 	# plt.plot(h.h['val_loss'])
