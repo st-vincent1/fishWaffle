@@ -108,7 +108,7 @@ def create_model(predictors, label, max_sequence_len, total_words):
 	Image('accuracy_plot.png')
 
 	fig = plt.figure()
-	plt.plot(h.history['loss']), '-ro')
+	plt.plot(h.history['loss'], '-ro')
 	plt.title('model loss')
 	plt.ylabel('loss')
 	plt.xlabel('epoch')
