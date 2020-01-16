@@ -95,18 +95,18 @@ def create_model(predictors, label, max_sequence_len, total_words):
 	h = model.fit(predictors, label, epochs=1, verbose=1, batch_size=512)
 	print(model.summary())
 	# list all data in history
-	print(h.history.keys())
+	print(h.h.keys())
 	# summarize history for accuracy
-	plt.plot(h.history['accuracy'])
-	plt.plot(h.history['val_accuracy'])
+	plt.plot(h.h['accuracy'])
+	plt.plot(h.h['val_accuracy'])
 	plt.title('model accuracy')
 	plt.ylabel('accuracy')
 	plt.xlabel('epoch')
 	plt.legend(['train', 'test'], loc='upper left')
 	plt.show()
 	# summarize history for loss
-	plt.plot(h.history['loss'])
-	plt.plot(h.history['val_loss'])
+	plt.plot(h.h['loss'])
+	plt.plot(h.h['val_loss'])
 	plt.title('model loss')
 	plt.ylabel('loss')
 	plt.xlabel('epoch')
