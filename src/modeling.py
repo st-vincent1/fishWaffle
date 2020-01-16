@@ -100,6 +100,7 @@ def create_model(predictors, label, max_sequence_len, total_words):
 	fig = plt.figure()
 	plt.plot(h.history['acc'], '-go')
 	plt.title('model accuracy')
+
 	plt.ylabel('accuracy')
 	plt.xlabel('epoch')
 	plt.show()
@@ -175,7 +176,7 @@ def analyse(text):
 	print(max(res_dic, key = res_dic.get))
 	return res_dic
 
-data = open('../data/trainData/train.txt')
+data = open('../data/trainData/train_speakers.txt')
 
 # Analysing punctuation in data
 # analyse(data)
@@ -183,7 +184,7 @@ data = open('../data/trainData/train.txt')
 data = sentencise(data)
 predictors, label, max_sequence_len, total_words = dataset_preparation(data)
 model = create_model(predictors, label, max_sequence_len, total_words)
-save_model('conv_model.json', 'conv_model.h5', model)
+save_model('conv_model_speakers.json', 'conv_model_speakers.h5', model)
 
 # model = load_model('k_punk_model.json', 'model.h5')
-print(generate_text("Is that yours? ", 500, max_sequence_len))
+print(generate_text("What drives you the most? ", 500, max_sequence_len))
