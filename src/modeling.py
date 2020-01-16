@@ -98,24 +98,25 @@ def create_model(predictors, label, max_sequence_len, total_words):
 	print(model.summary())
 	# summarize history for accuracy
 	fig = plt.figure()
-	plt.plot(log(h.history['loss']), '-ro')
 	plt.plot(h.history['acc'], '-go')
-	plt.title('model accuracy and loss')
-	plt.ylabel('score')
+	plt.title('model accuracy')
+	plt.ylabel('accuracy')
 	plt.xlabel('epoch')
-	plt.legend(['loss', 'accuracy'], loc='upper left')
 	plt.show()
-	fig.savefig('plot.png')
+	fig.savefig('accuracy_plot.png')
 	from IPython.display import Image
-	Image('plot.png')
-	# # summarize history for loss
-	# plt.plot(h.h['loss'])
-	# plt.plot(h.h['val_loss'])
-	# plt.title('model loss')
-	# plt.ylabel('loss')
-	# plt.xlabel('epoch')
-	# plt.legend(['train', 'test'], loc='upper left')
-	# plt.show()
+	Image('accuracy_plot.png')
+
+	fig = plt.figure()
+	plt.plot(h.history['loss']), '-ro')
+	plt.title('model loss')
+	plt.ylabel('loss')
+	plt.xlabel('epoch')
+	plt.show()
+	fig.savefig('loss_plot.png')
+	from IPython.display import Image
+	Image('loss_plot.png')
+
 	return model
 
 def generate_text(seed_text, next_words, max_sequence_len):
