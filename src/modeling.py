@@ -94,7 +94,7 @@ def create_model(predictors, label, max_sequence_len, total_words):
 	# earlystop = EarlyStopping(monitor='val_loss', min_delta=1, patience=5, verbose=0, mode='auto')
 	h = model.fit(predictors, label, epochs=1, verbose=1, batch_size=512)
 	print(h.history['loss'])
-	print(h.history['accuracy'])
+	print(h.history['acc'])
 	# plt.bar(h.history['loss'])
 	# plt.show()
 	print(model.summary())
