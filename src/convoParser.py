@@ -20,12 +20,6 @@ def parse(s):
     if re.findall(r'^[A-Z]+:', s):
         s = s[2:] if s[1] == ':' else s[3:]
         start = True
-    # if s[0:2] in speakers:
-    #     print(s[0:2])
-    #     s = s[2:]
-    #     print(s)
-    #     start = True
-    #     print(start)
     s = re.sub(r'\s{2,}', ' ', s)
     return s.strip(), start
 
@@ -36,10 +30,9 @@ conv_path = os.path.join(rel_path, 'data/convData')
 train_path = os.path.join(rel_path, 'data/trainData')
 if not os.path.isdir(train_path):
     os.mkdir(train_path)
-i = 0
 for process_file in os.listdir(conv_path):
     f = open(os.path.join(conv_path, process_file))
-    dest_file_path = "conv" + str(i)
+    # dest_file_path = "conv" + str(i)
     line = f.readline()
     dump = ''
     speakers = []
@@ -67,7 +60,7 @@ for process_file in os.listdir(conv_path):
                 dump = dump + ' ' + s
         line = f.readline()
     wrapped = '\n'.join(tw.wrap(dump))
+    dest_file_path = "conv_" + '_'.join(speakers)
     write_text_file = open(os.path.join(train_path, dest_file_path), "w")
     write_text_file.write(wrapped)
     write_text_file.close()
-    i += 1
