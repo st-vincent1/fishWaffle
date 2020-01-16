@@ -95,23 +95,23 @@ def create_model(predictors, label, max_sequence_len, total_words):
 	h = model.fit(predictors, label, epochs=1, verbose=1, batch_size=512)
 	print(model.summary())
 	# list all data in history
-	print(h.h.keys())
-	# summarize history for accuracy
-	plt.plot(h.h['accuracy'])
-	plt.plot(h.h['val_accuracy'])
-	plt.title('model accuracy')
-	plt.ylabel('accuracy')
-	plt.xlabel('epoch')
-	plt.legend(['train', 'test'], loc='upper left')
-	plt.show()
-	# summarize history for loss
-	plt.plot(h.h['loss'])
-	plt.plot(h.h['val_loss'])
-	plt.title('model loss')
-	plt.ylabel('loss')
-	plt.xlabel('epoch')
-	plt.legend(['train', 'test'], loc='upper left')
-	plt.show()
+	print(h.history.keys())
+	# # summarize history for accuracy
+	# plt.plot(h.h['accuracy'])
+	# plt.plot(h.h['val_accuracy'])
+	# plt.title('model accuracy')
+	# plt.ylabel('accuracy')
+	# plt.xlabel('epoch')
+	# plt.legend(['train', 'test'], loc='upper left')
+	# plt.show()
+	# # summarize history for loss
+	# plt.plot(h.h['loss'])
+	# plt.plot(h.h['val_loss'])
+	# plt.title('model loss')
+	# plt.ylabel('loss')
+	# plt.xlabel('epoch')
+	# plt.legend(['train', 'test'], loc='upper left')
+	# plt.show()
 	return model
 
 def generate_text(seed_text, next_words, max_sequence_len):
