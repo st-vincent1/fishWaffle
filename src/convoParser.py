@@ -3,10 +3,16 @@ import re
 import textwrap as tw
 
 def filters(s):
+    # Interview comments
     if s.startswith("TIME") or s.startswith("INTERVIEW"):
         return False
+    # Interview comments
     if s.startswith("NB"):
         return False
+    # Short utterances can only be interruptions
+    if len(s.split()) <= 2:
+        return False
+    # Empty utterances
     if re.findall(r'^\s*$', s):
         return False
     if not s:
