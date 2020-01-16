@@ -11,6 +11,8 @@ import pprint as pp
 import warnings
 import matplotlib
 import matplotlib.pyplot as plt
+%matplotlib inline
+
 warnings.filterwarnings('ignore')
 
 # Note: num_words does NOT reduce the size of the dictionary on its own; see
