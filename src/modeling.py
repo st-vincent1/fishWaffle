@@ -9,6 +9,8 @@ import numpy as np
 import re
 import pprint as pp
 import warnings
+import matplotlib
+import matplotlib.pyplot as plt
 warnings.filterwarnings('ignore')
 
 # Note: num_words does NOT reduce the size of the dictionary on its own; see
@@ -90,7 +92,9 @@ def create_model(predictors, label, max_sequence_len, total_words):
 
 	model.compile(loss='categorical_crossentropy', optimizer=Adam(lr = 2e-3), metrics=['accuracy'])
 	# earlystop = EarlyStopping(monitor='val_loss', min_delta=1, patience=5, verbose=0, mode='auto')
-	model.fit(predictors, label, epochs=128, verbose=1, batch_size=512)
+	h = model.fit(predictors, label, epochs=1, verbose=1, batch_size=512)
+	plt.bar(h.history['loss'])
+	plt.show()
 	print(model.summary())
 	return model
 
