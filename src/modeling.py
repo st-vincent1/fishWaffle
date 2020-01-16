@@ -93,19 +93,20 @@ def create_model(predictors, label, max_sequence_len, total_words):
 
 	model.compile(loss='categorical_crossentropy', optimizer=Adam(lr = 2e-3), metrics=['accuracy'])
 	# earlystop = EarlyStopping(monitor='val_loss', min_delta=1, patience=5, verbose=0, mode='auto')
-	h = model.fit(predictors, label, epochs=1, verbose=1, batch_size=512)
+	h = model.fit(predictors, label, epochs=2, verbose=1, batch_size=512)
 	print(model.summary())
 	# summarize history for accuracy
 	fig = plt.figure()
-	plt.plot(h.history['acc'], 'ro')
-	plt.title('model accuracy')
-	plt.ylabel('accuracy')
+	plt.plot(h.history['loss'], '-go')
+	plt.plot(h.history['acc'], '-ro')
+	plt.title('model accuracy and loss')
+	plt.ylabel('score')
 	plt.xlabel('epoch')
-	plt.legend(['train', 'test'], loc='upper left')
+	plt.legend(['loss', 'accuracy'], loc='upper left')
 	plt.show()
-	fig.savefig('accuracy_plot.png')
+	fig.savefig('plot.png')
 	from IPython.display import Image
-	Image('accuracy_plot.png')
+	Image('plot.png')
 	# # summarize history for loss
 	# plt.plot(h.h['loss'])
 	# plt.plot(h.h['val_loss'])
