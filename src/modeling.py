@@ -11,6 +11,7 @@ import pprint as pp
 import warnings
 import matplotlib
 import matplotlib.pyplot as plt
+from math import log
 
 warnings.filterwarnings('ignore')
 
@@ -97,8 +98,8 @@ def create_model(predictors, label, max_sequence_len, total_words):
 	print(model.summary())
 	# summarize history for accuracy
 	fig = plt.figure()
-	plt.plot(h.history['loss'], '-go')
-	plt.plot(h.history['acc'], '-ro')
+	plt.plot(log(h.history['loss']), '-ro')
+	plt.plot(h.history['acc'], '-go')
 	plt.title('model accuracy and loss')
 	plt.ylabel('score')
 	plt.xlabel('epoch')
