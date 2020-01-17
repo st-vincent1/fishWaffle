@@ -176,7 +176,7 @@ def analyse(text):
 	print(max(res_dic, key = res_dic.get))
 	return res_dic
 
-data = open('../data/trainData/train_speakers.txt')
+data = open('../data/trainData/train_origin.txt')
 
 # Analysing punctuation in data
 # analyse(data)
@@ -184,7 +184,7 @@ data = open('../data/trainData/train_speakers.txt')
 data = sentencise(data)
 predictors, label, max_sequence_len, total_words = dataset_preparation(data)
 model = create_model(predictors, label, max_sequence_len, total_words)
-save_model('conv_model_speakers.json', 'conv_model_speakers.h5', model)
+save_model('conv_model_origin.json', 'conv_model_origin.h5', model)
 
 # model = load_model('k_punk_model.json', 'model.h5')
 print(generate_text("What drives you the most? ", 500, max_sequence_len))
