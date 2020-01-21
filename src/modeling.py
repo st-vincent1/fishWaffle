@@ -100,7 +100,7 @@ def create_model(predictors, label, max_sequence_len, total_words):
 		pass
 	model.compile(loss='categorical_crossentropy', optimizer=Adam(lr = 2e-3), metrics=['accuracy'])
 	# earlystop = EarlyStopping(monitor='val_loss', min_delta=1, patience=5, verbose=0, mode='auto')
-	h = model.fit(predictors, label, epochs=120, verbose=1, batch_size=512)
+	h = model.fit(predictors, label, epochs=250, verbose=1, batch_size=512)
 	print(model.summary())
 	# summarize history for accuracy
 	fig = plt.figure()
@@ -205,24 +205,21 @@ except:
 
 data = sentencise(data)
 predictors, label, max_sequence_len, total_words = dataset_preparation(data)
-# model = create_model(predictors, label, max_sequence_len, total_words)
-# save_model('conv_model_origin.json', 'conv_model_origin.h5', model)
+model = create_model(predictors, label, max_sequence_len, total_words)
+save_model(model_choice[0], model_choice[1], model)
 
-model = load_model(model_choice[0], model_choice[1])
-prompts = "Baby I'm in the mood for you".split()
-# f = open(prompt_file, 'r')
-# rel_path = re.sub(r'[^/]+$', '', os.getcwd())
-# conv_path = os.path.join(rel_path, 'data/')
-# train_path = os.path.join(rel_path, 'data/trainData')
-# out_path = ''
+# model = load_model(model_choice[0], model_choice[1])
+# prompts = "Baby I'm in the mood for you".split()
+
+
 # line = f.readline()
 # while(line):
 # 	g = open(os.path.join(line[0], 'w+')
 # 	g.write(generate_text(prompt, ans_len, max_sequence_len))
 # 	g.close()
 
-for prompt in prompts:
-	g = open(os.path.join('../data/results/', prompt[:12] + '.txt'), 'w+')
-	g.write(generate_text(prompt, ans_len, max_sequence_len))
+# for prompt in prompts:
+# 	g = open(os.path.join('../data/results/', prompt[:12] + '.txt'), 'w+')
+# 	g.write(generate_text(prompt, ans_len, max_sequence_len))
 # prompt = input("Give prompt\n")
-print(generate_text(prompt, ans_len, max_sequence_len))
+# print(generate_text(prompt, ans_len, max_sequence_len))
