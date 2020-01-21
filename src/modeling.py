@@ -12,7 +12,8 @@ import warnings
 import matplotlib
 import matplotlib.pyplot as plt
 from math import log
-
+import sys
+import os
 warnings.filterwarnings('ignore')
 
 ans_len = 68
@@ -181,7 +182,23 @@ def analyse(text):
 	# print(max(res_dic, key = res_dic.get))
 	return res_dic
 
-data = open('../data/trainData/train_origin.txt')
+""" MAIN """
+
+
+try:
+	# choice = input"Choose model (origin/speakers)\n")
+	choice = str(sys.argv[1])
+	print(choice)
+	if choice == 'origin':
+		model_choice = ('../models/conv_model_origin.json', '../models/conv_model_origin.h5')
+		data = open('../data/trainData/train_origin.txt')
+	elif choice == 'speakers':
+		model_choice = ('../models/conv_model_speakers.json', '../models/conv_model_speakers.h5')
+		data = open('../data/trainData/train_speakers.txt')
+	else:
+		raise Exception("An error occured")
+except:
+	exit()
 
 # Analysing punctuation in data
 # analyse(data)
@@ -190,17 +207,22 @@ data = sentencise(data)
 predictors, label, max_sequence_len, total_words = dataset_preparation(data)
 # model = create_model(predictors, label, max_sequence_len, total_words)
 # save_model('conv_model_origin.json', 'conv_model_origin.h5', model)
-try:
-	choice = input("Choose model (origin/speakers)\n")
-	if choice == 'origin':
-		model_choice = ('../models/conv_model_origin.json', '../models/conv_model_origin.h5')
-	elif choice == 'speakers':
-		model_choice = ('../models/conv_model_speakers.json', '../models/conv_model_speakers.h5')
-	else:
-		raise Exception("An error occured")
-except:
-	exit()
 
 model = load_model(model_choice[0], model_choice[1])
-prompt = input("Give prompt\n")
+prompts = "Baby I'm in the mood for you".split()
+# f = open(prompt_file, 'r')
+# rel_path = re.sub(r'[^/]+$', '', os.getcwd())
+# conv_path = os.path.join(rel_path, 'data/')
+# train_path = os.path.join(rel_path, 'data/trainData')
+# out_path = ''
+# line = f.readline()
+# while(line):
+# 	g = open(os.path.join(line[0], 'w+')
+# 	g.write(generate_text(prompt, ans_len, max_sequence_len))
+# 	g.close()
+
+for prompt in prompts:
+	g = open(os.path.join('../data/results/', prompt[:12] + '.txt'), 'w+')
+	g.write(generate_text(prompt, ans_len, max_sequence_len))
+# prompt = input("Give prompt\n")
 print(generate_text(prompt, ans_len, max_sequence_len))

@@ -23,9 +23,10 @@ def parse(s):
     speaker = False
     s = re.sub(r'\[anon\]', '**anon**', s)
     s = re.sub(r'\(([^()]+)\)|\[([^\[\]]+)\]', '', s)
-    if re.findall(r'^[A-Z]+:', s):
-        speaker = s[0]
-        s = s[2:] if s[1] == ':' else s[3:]
+    attempt = re.findall(r'(^[A-Z]+):(.*)', s)
+    if attempt:
+        speaker, s = attempt[0][0], attempt[0][1]
+        # s = s[2:] if s[1] == ':' else s[3:]
         start = True
     s = re.sub(r'\s{2,}', ' ', s)
     return s.strip(), start, speaker
