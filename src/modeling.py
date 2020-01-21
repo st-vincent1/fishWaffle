@@ -15,6 +15,8 @@ from math import log
 
 warnings.filterwarnings('ignore')
 
+ans_len = 68
+
 # Note: num_words does NOT reduce the size of the dictionary on its own; see
 # https://github.com/keras-team/keras/issues/8092#issuecomment-372833486
 """ This definition is if handling UNK words """
@@ -30,7 +32,6 @@ def sentencise(text):
 		line = re.sub('\.\.\.', ' eos', line)
 		dump = dump + line + ' '
 		line = text.readline()
-	print(dump)
 	return dump
 
 def dataset_preparation(data):
@@ -176,8 +177,8 @@ def analyse(text):
 		res_dic.update(wordListToFreqDict(res))
 		dump += line
 		line = text.readline()
-	pp.pprint(res_dic)
-	print(max(res_dic, key = res_dic.get))
+	# pp.pprint(res_dic)
+	# print(max(res_dic, key = res_dic.get))
 	return res_dic
 
 data = open('../data/trainData/train_origin.txt')
@@ -187,8 +188,19 @@ data = open('../data/trainData/train_origin.txt')
 
 data = sentencise(data)
 predictors, label, max_sequence_len, total_words = dataset_preparation(data)
-model = create_model(predictors, label, max_sequence_len, total_words)
-save_model('conv_model_origin.json', 'conv_model_origin.h5', model)
+# model = create_model(predictors, label, max_sequence_len, total_words)
+# save_model('conv_model_origin.json', 'conv_model_origin.h5', model)
+try:
+	choice = input("Choose model (origin/speakers)\n")
+	if choice == 'origin':
+		model_choice = ('../models/conv_model_origin.json', '../models/conv_model_origin.h5')
+	elif choice == 'speakers':
+		model_choice = ('../models/conv_model_speakers.json', '../models/conv_model_speakers.h5')
+	else:
+		raise Exception("An error occured")
+except:
+	exit()
 
-# model = load_model('k_punk_model.json', 'model.h5')
-print(generate_text("What drives you the most? ", 500, max_sequence_len))
+model = load_model(model_choice[0], model_choice[1])
+prompt = input("Give prompt\n")
+print(generate_text(prompt, ans_len, max_sequence_len))
