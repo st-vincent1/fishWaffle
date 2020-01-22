@@ -16,6 +16,7 @@ import sys
 import os
 warnings.filterwarnings('ignore')
 
+# Later to be corrected to wrapped 60-90
 ans_len = 68
 
 # Note: num_words does NOT reduce the size of the dictionary on its own; see
@@ -24,7 +25,7 @@ ans_len = 68
 # total_words = 5000
 # tokenizer = Tokenizer(lower = False, oov_token = 'UNK', filters = '!"#$%&()*+,./:;<=>?@\\^_`{|}~\t\n', num_words = total_words)
 """ End """
-tokenizer = Tokenizer(lower = False, oov_token = 'UNK', filters = '!"#$%&()*+,/:;<=>?@\\^_`{|}~\t\n')
+tokenizer = Tokenizer(lower = False, oov_token = 'UNK', filters = '!"#$%&()+,/:;<=>?@\\^_`{|}~\t\n')
 # tokenizer = Tokenizer()
 def sentencise(text):
 	dump = ""
@@ -99,9 +100,16 @@ def create_model(predictors, label, max_sequence_len, total_words):
 	except:
 		pass
 
-	model.compile(loss='categorical_crossentropy', optimizer=Adam(lr = 2e-3), metrics=['accuracy'])
+	model.compile(loss='categorical_crossentropy',
+				  optimizer=Adam(lr = 2e-3),
+				  metrics=['accuracy'])
 	# earlystop = EarlyStopping(monitor='val_loss', min_delta=1, patience=5, verbose=0, mode='auto')
-	h = model.fit(predictors, label, epochs=250, verbose=1, batch_size=1024)
+	h = model.fit(predictors,
+				  label,
+				  epochs=250,
+				  verbose=1,
+				  batch_size=1024,
+				  validation_split = 0.2)
 	print(model.summary())
 	# summarize history for accuracy
 	fig = plt.figure()
@@ -127,7 +135,7 @@ def create_model(predictors, label, max_sequence_len, total_words):
 
 	return model
 
-def generate_text(seed_text, next_words, max_sequence_len):
+def generate_text(model, seed_text, next_words, max_sequence_len):
 	for _ in range(next_words):
 		# Tokenize current predicted sequence and pad it
 		token_list = tokenizer.texts_to_sequences([seed_text])[0]
@@ -168,65 +176,8 @@ def wordListToFreqDict(wordlist):
     wordfreq = [wordlist.count(p) for p in wordlist]
     return dict(list(zip(wordlist,wordfreq)))
 
-# Analysing punctuation in data
-def analyse(text):
-	res_dic = {}
-	dump = ""
-	line = text.readline()
-	# Analysing comma words
-	while(line):
-		res = re.findall('\, [a-z]*', line)
-		res_dic.update(wordListToFreqDict(res))
-		dump += line
-		line = text.readline()
-	# pp.pprint(res_dic)
-	# print(max(res_dic, key = res_dic.get))
-	return res_dic
 
-""" MAIN """
-
-
-try:
-	# choice = input"Choose model (origin/speakers)\n")
-	choice = str(sys.argv[1])
-	rel_path = re.sub(r'[^/]+$', '', os.getcwd())
-	data_path = os.path.join(rel_path, 'data/trainData/')
-	model_path = os.path.join(rel_path, 'models/')
-
-	if choice == 'origin':
-		model_choice = (os.path.join(model_path, 'conv_model_origin.json'),
-					   os.path.join(model_path, 'conv_model_origin.h5'))
-		data = open(os.path.join(data_path, 'train_origin.txt'))
-	elif choice == 'speakers':
-		model_choice = (os.path.join(model_path, 'conv_model_speakers.json'),
-					   os.path.join(model_path, 'conv_model_speakers.h5'))
-		data = open(os.path.join(data_path, 'train_speakers.txt'))
-	else:
-		raise Exception("An error occured")
-except:
-	print("Error")
-	exit()
-
-# Analysing punctuation in data
-# analyse(data)
-
-data = sentencise(data)
-predictors, label, max_sequence_len, total_words = dataset_preparation(data)
-model = create_model(predictors, label, max_sequence_len, total_words)
-save_model(model_choice[0], model_choice[1], model)
-
-# model = load_model(model_choice[0], model_choice[1])
-# prompts = "Baby I'm in the mood for you".split()
-
-
-# line = f.readline()
-# while(line):
-# 	g = open(os.path.join(line[0], 'w+')
-# 	g.write(generate_text(prompt, ans_len, max_sequence_len))
-# 	g.close()
-
-# for prompt in prompts:
-# 	g = open(os.path.join('../data/results/', prompt[:12] + '.txt'), 'w+')
-# 	g.write(generate_text(prompt, ans_len, max_sequence_len))
-# prompt = input("Give prompt\n")
-# print(generate_text(prompt, ans_len, max_sequence_len))
+""" MAIN
+Train bit moved to train_waffler.py
+Test bit (generation) moved to waffler.py
+"""
