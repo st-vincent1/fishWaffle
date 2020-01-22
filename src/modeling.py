@@ -95,12 +95,13 @@ def create_model(predictors, label, max_sequence_len, total_words):
 	model.add(Dense(total_words+1, activation='softmax'))
 
 	try:
-		model = ku.multi_gpu_model(model)
+		model = ku.multi_gpu_model(model, gpus=3)
 	except:
 		pass
+
 	model.compile(loss='categorical_crossentropy', optimizer=Adam(lr = 2e-3), metrics=['accuracy'])
 	# earlystop = EarlyStopping(monitor='val_loss', min_delta=1, patience=5, verbose=0, mode='auto')
-	h = model.fit(predictors, label, epochs=250, verbose=1, batch_size=512)
+	h = model.fit(predictors, label, epochs=1, verbose=1, batch_size=512)
 	print(model.summary())
 	# summarize history for accuracy
 	fig = plt.figure()
@@ -147,7 +148,7 @@ def generate_text(seed_text, next_words, max_sequence_len):
 
 def save_model(filename, weights, model):
 	model_json = model.to_json()
-	with open(filename, "w") as json_file:
+	with open(filename, "w+") as json_file:
 	    json_file.write(model_json)
 	# serialize weights to HDF5
 	model.save_weights(weights)
@@ -189,12 +190,17 @@ try:
 	# choice = input"Choose model (origin/speakers)\n")
 	choice = str(sys.argv[1])
 	print(choice)
+	rel_path = re.sub(r'[^/]+$', '', os.getcwd())
+	data_path = os.path.join(rel_path, 'data/')
+	model_path = os.path.join(rel_path, 'models/')
 	if choice == 'origin':
-		model_choice = ('../models/conv_model_origin.json', '../models/conv_model_origin.h5')
-		data = open('../data/trainData/train_origin.txt')
+		model_choice = (os.path.join(model_path, 'conv_model_origin.json'),
+					   os.path.join(model_path, 'conv_model_origin.h5'))
+		data = open(os.path.join(data_path, 'train_origin.txt')
 	elif choice == 'speakers':
-		model_choice = ('../models/conv_model_speakers.json', '../models/conv_model_speakers.h5')
-		data = open('../data/trainData/train_speakers.txt')
+		model_choice = (os.path.join(model_path, 'conv_model_speakers.json'),
+					   os.path.join(model_path, 'conv_model_speakers.h5'))
+		data = open(os.path.join(data_path, 'train_speakers.txt')
 	else:
 		raise Exception("An error occured")
 except:
