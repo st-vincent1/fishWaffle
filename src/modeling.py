@@ -189,21 +189,22 @@ def analyse(text):
 try:
 	# choice = input"Choose model (origin/speakers)\n")
 	choice = str(sys.argv[1])
-	print(choice)
 	rel_path = re.sub(r'[^/]+$', '', os.getcwd())
-	data_path = os.path.join(rel_path, 'data/')
+	data_path = os.path.join(rel_path, 'data/trainData/')
 	model_path = os.path.join(rel_path, 'models/')
+
 	if choice == 'origin':
 		model_choice = (os.path.join(model_path, 'conv_model_origin.json'),
 					   os.path.join(model_path, 'conv_model_origin.h5'))
-		data = open(os.path.join(data_path, 'train_origin.txt')
+		data = open(os.path.join(data_path, 'train_origin.txt'))
 	elif choice == 'speakers':
 		model_choice = (os.path.join(model_path, 'conv_model_speakers.json'),
 					   os.path.join(model_path, 'conv_model_speakers.h5'))
-		data = open(os.path.join(data_path, 'train_speakers.txt')
+		data = open(os.path.join(data_path, 'train_speakers.txt'))
 	else:
 		raise Exception("An error occured")
 except:
+	print("Error")
 	exit()
 
 # Analysing punctuation in data
