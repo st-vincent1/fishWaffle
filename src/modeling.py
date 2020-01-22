@@ -109,7 +109,8 @@ def create_model(predictors, label, max_sequence_len, total_words):
 				  epochs=1,
 				  verbose=1,
 				  batch_size=1024,
-				  validation_split = 0.2)
+				  # validation_split = 0.2)
+				  )
 	print(model.summary())
 	# summarize history for accuracy
 	fig = plt.figure()
