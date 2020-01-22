@@ -118,7 +118,7 @@ def create_model(predictors, label, max_sequence_len, total_words):
 
 	plt.ylabel('accuracy')
 	plt.xlabel('epoch')
-	plt.show()
+	# plt.show()
 	fig.savefig('accuracy_plot.png')
 	from IPython.display import Image
 	Image('accuracy_plot.png')
@@ -128,7 +128,7 @@ def create_model(predictors, label, max_sequence_len, total_words):
 	plt.title('model loss')
 	plt.ylabel('loss')
 	plt.xlabel('epoch')
-	plt.show()
+	# plt.show()
 	fig.savefig('loss_plot.png')
 	from IPython.display import Image
 	Image('loss_plot.png')
