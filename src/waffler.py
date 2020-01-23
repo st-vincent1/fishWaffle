@@ -15,7 +15,7 @@ try:
 	rel_path = re.sub(r'[^/]+$', '', os.getcwd())
 	data_path = os.path.join(rel_path, 'data/trainData/')
 	model_path = os.path.join(rel_path, 'models/')
-
+	prompt_path = os.path.join(rel_path, 'data/prompts/')
 	if choice == 'origin':
 		model_choice = (os.path.join(model_path, 'conv_model_origin.json'), os.path.join(model_path, 'conv_model_origin.h5'))
 		print(model_choice)
@@ -37,13 +37,16 @@ predictors, label, max_sequence_len, total_words = mo.dataset_preparation(data)
 print("Loading model")
 model = mo.load_model(model_choice[0], model_choice[1])
 # Change later to reading prompts from file
-prompts = "Baby I'm in the mood for you".split()
+f = open(os.path.join(prompt_path, 'waffle_prompts.txt'), 'r')
+prompts = f.read().splitlines()
+print(prompts)
+# "Baby I'm in the mood for you".split()
 
 print("Generating text")
 for prompt in prompts:
-	print(mo.generate_text(model, prompt, ans_len, max_sequence_len))
-	# g = open(os.path.join('../data/results/', prompt[:12] + '.txt'), 'w+')
-	# g.write(generate_text(prompt, ans_len, max_sequence_len))
+	# print(mo.generate_text(model, prompt, ans_len, max_sequence_len))
+	g = open(os.path.join('../data/results/', choice + '_' + prompt[:12] + '.txt'), 'w+')
+	g.write(mo.generate_text(model, prompt, ans_len, max_sequence_len))
 
 # prompt = input("Give prompt\n")
 # print(generate_text(prompt, ans_len, max_sequence_len))

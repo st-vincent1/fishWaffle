@@ -96,7 +96,7 @@ def create_model(predictors, label, max_sequence_len, total_words):
 	model.add(Dense(total_words+1, activation='softmax'))
 
 	try:
-		model = ku.multi_gpu_model(model, gpus=3)
+		model = ku.multi_gpu_model(model)
 	except:
 		pass
 
@@ -109,8 +109,7 @@ def create_model(predictors, label, max_sequence_len, total_words):
 				  epochs=1,
 				  verbose=1,
 				  batch_size=1024,
-				  # validation_split = 0.2)
-				  )
+				  validation_split = 0.2)
 	print(model.summary())
 	# summarize history for accuracy
 	fig = plt.figure()
@@ -203,7 +202,7 @@ except:
 	print("Error; to run correctly, supply 1 argument from {origin, speakers}")
 	exit()
 
-data = sentencise(data)
-predictors, label, max_sequence_len, total_words = dataset_preparation(data)
-model = create_model(predictors, label, max_sequence_len, total_words)
-save_model(model_choice[0], model_choice[1], model)
+# data = sentencise(data)
+# predictors, label, max_sequence_len, total_words = dataset_preparation(data)
+# model = create_model(predictors, label, max_sequence_len, total_words)
+# save_model(model_choice[0], model_choice[1], model)
