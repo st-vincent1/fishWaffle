@@ -30,23 +30,24 @@ except:
 	print("Error")
 	exit()
 
-print("Sentencising")
+# print("Sentencising")
 data = mo.sentencise(data)
-print("Prep")
+# print("Prep")
 predictors, label, max_sequence_len, total_words = mo.dataset_preparation(data)
+# max_sequence_len = 25
 print("Loading model")
 model = mo.load_model(model_choice[0], model_choice[1])
 # Change later to reading prompts from file
 f = open(os.path.join(prompt_path, 'waffle_prompts.txt'), 'r')
-prompts = f.read().splitlines()
-print(prompts)
-# "Baby I'm in the mood for you".split()
+# prompts = f.read().splitlines()
+# print(prompts)
+prompts = "Baby I'm in the mood for you".split()
 
 print("Generating text")
 for prompt in prompts:
-	# print(mo.generate_text(model, prompt, ans_len, max_sequence_len))
-	g = open(os.path.join('../data/results/', choice + '_' + prompt[:12] + '.txt'), 'w+')
-	g.write(mo.generate_text(model, prompt, ans_len, max_sequence_len))
+	print(mo.generate_text(model, prompt, ans_len, max_sequence_len))
+	# g = open(os.path.join('../data/results/', choice + '_' + prompt[:12] + '.txt'), 'w+')
+	# g.write(mo.generate_text(model, prompt, ans_len, max_sequence_len))
 
 # prompt = input("Give prompt\n")
 # print(generate_text(prompt, ans_len, max_sequence_len))

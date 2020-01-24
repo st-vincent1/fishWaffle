@@ -139,6 +139,7 @@ def generate_text(model, seed_text, next_words, max_sequence_len):
 	for _ in range(next_words):
 		# Tokenize current predicted sequence and pad it
 		token_list = tokenizer.texts_to_sequences([seed_text])[0]
+		print(token_list)
 		token_list = pad_sequences([token_list], maxlen=max_sequence_len-1, padding='pre')
 		# Use model to predict next word
 		predicted = model.predict_classes(token_list, verbose=0)
