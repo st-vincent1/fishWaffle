@@ -16,8 +16,7 @@ import sys
 import os
 warnings.filterwarnings('ignore')
 
-# Later to be corrected to wrapped 60-90
-ans_len = 68
+
 
 # Note: num_words does NOT reduce the size of the dictionary on its own; see
 # https://github.com/keras-team/keras/issues/8092#issuecomment-372833486
@@ -184,7 +183,7 @@ Test bit (generation) moved to waffler.py
 """
 try:
 	# choice = input"Choose model (origin/speakers)\n")
-	choice = str(sys.argv[1])
+	choice = "origin"
 	rel_path = re.sub(r'[^/]+$', '', os.getcwd())
 	data_path = os.path.join(rel_path, 'data/trainData/')
 	model_path = os.path.join(rel_path, 'models/')
